@@ -1,18 +1,41 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { setSort } from '../redux/slices/filterSlice';
+
+export const listSort = [
+  { name: 'Популярности (DESC)', sortProperty: 'rating' },
+  { name: 'Популярности (ASC)', sortProperty: '-rating' },
+  { name: 'Цене (DESC)', sortProperty: 'price' },
+  { name: 'Цене (ASC)', sortProperty: '-price' },
+  { name: 'Алфавиту (DESC)', sortProperty: 'title' },
+  { name: 'Алфавиту (ASC)', sortProperty: '-title' },
+];
 
 const Sort = () => {
+  const dispatch = useDispatch();
+  const { name } = useSelector((state) => state.filterSlice.sort);
   const [showSort, setShowSort] = useState(false);
   const [activeModal, setActiveModal] = useState(0);
-  const listSort = ['популярности', 'цене', 'алфавиту'];
-  const sortName = listSort[activeModal];
+  const sortRef = useRef();
+
+  useEffect(() => {
+    const hadleClickOutside = (e) => {
+      if (!e.path.includes(sortRef.current) && showSort) {
+        setShowSort(!showSort);
+      }
+    };
+    document.body.addEventListener('click', hadleClickOutside);
+    return () => document.body.removeEventListener('click', hadleClickOutside);
+  }, [showSort]);
 
   const onSelectedSort = (index) => {
+    dispatch(setSort(listSort[index]));
     setActiveModal(index);
     setShowSort(false);
   };
 
   return (
-    <div className="sort">
+    <div ref={sortRef} className="sort">
       <div className="sort__label">
         <svg
           width="10"
@@ -30,7 +53,7 @@ const Sort = () => {
           onClick={() => {
             setShowSort(!showSort);
           }}>
-          {sortName}
+          {name}
         </span>
       </div>
       {showSort && (
@@ -39,12 +62,12 @@ const Sort = () => {
             {listSort.map((element, index) => {
               return (
                 <li
-                  key={element}
+                  key={element.name}
                   onClick={() => {
                     onSelectedSort(index);
                   }}
                   className={index === activeModal ? 'active' : ''}>
-                  {element}
+                  {element.name}
                 </li>
               );
             })}
