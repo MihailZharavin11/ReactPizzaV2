@@ -1,26 +1,36 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setSort } from '../redux/slices/filterSlice';
+import { setSort } from '../redux/slices/filter/slice';
+import { SortPropety } from '../redux/slices/filter/types';
+import { selectSort } from '../redux/slices/filter/selectors';
 
-export const listSort = [
-  { name: 'Популярности (DESC)', sortProperty: 'rating' },
-  { name: 'Популярности (ASC)', sortProperty: '-rating' },
-  { name: 'Цене (DESC)', sortProperty: 'price' },
-  { name: 'Цене (ASC)', sortProperty: '-price' },
-  { name: 'Алфавиту (DESC)', sortProperty: 'title' },
-  { name: 'Алфавиту (ASC)', sortProperty: '-title' },
+type SortItem = {
+  name: string;
+  sortProperty: SortPropety;
+};
+
+export const listSort: SortItem[] = [
+  { name: 'Популярности (DESC)', sortProperty: SortPropety.RATING_DESC },
+  { name: 'Популярности (ASC)', sortProperty: SortPropety.RATING_ASC },
+  { name: 'Цене (DESC)', sortProperty: SortPropety.PRICE_DESC },
+  { name: 'Цене (ASC)', sortProperty: SortPropety.PRICE_ASC },
+  { name: 'Алфавиту (DESC)', sortProperty: SortPropety.TITLE_DESC },
+  { name: 'Алфавиту (ASC)', sortProperty: SortPropety.TITLE_ASC },
 ];
 
 const Sort = () => {
   const dispatch = useDispatch();
-  const { name } = useSelector((state) => state.filterSlice.sort);
+  const { name } = useSelector(selectSort);
   const [showSort, setShowSort] = useState(false);
   const [activeModal, setActiveModal] = useState(0);
-  const sortRef = useRef();
+  const sortRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const hadleClickOutside = (e) => {
-      if (!e.path.includes(sortRef.current) && showSort) {
+    const hadleClickOutside = (e: MouseEvent) => {
+      const _event = e as MouseEvent & {
+        path: Node[];
+      };
+      if (sortRef.current && !_event.path.includes(sortRef.current) && showSort) {
         setShowSort(!showSort);
       }
     };
@@ -28,7 +38,7 @@ const Sort = () => {
     return () => document.body.removeEventListener('click', hadleClickOutside);
   }, [showSort]);
 
-  const onSelectedSort = (index) => {
+  const onSelectedSort = (index: number) => {
     dispatch(setSort(listSort[index]));
     setActiveModal(index);
     setShowSort(false);

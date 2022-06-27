@@ -1,0 +1,21 @@
+.pizzaWrapper {
+  display: flex;
+  .pizzaLeftBlock {
+    img {
+      width: 500px;
+      height: 500px;
+    }
+    h2 {
+      margin-bottom: 40px;
+    }
+  }
+  .pizzaRightBlock {
+    margin-left: 20px;
+    .pizzaPrice {
+      margin-bottom: 40px;
+      h3 {
+        margin-top: 10px;
+      }
+    }
+  }
+}

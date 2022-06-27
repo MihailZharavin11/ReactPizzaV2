@@ -1,31 +1,30 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addPizzaToCart } from '../../redux/slices/cartSlice';
+import { addPizzaToCart } from '../../redux/slices/cart/slice';
+import { countPizza } from '../../redux/slices/cart/selectors';
+import { TCartItem } from '../../redux/slices/cart/types';
 import { v4 as uuidv4 } from 'uuid';
+import { Link } from 'react-router-dom';
 
-const PizzaBlock = ({ id, title, price, imageUrl, types, sizes }) => {
-  const typesName = ['тонкое', 'традиционное'];
-  const [count, setCount] = useState(0);
+type PizzaBlockProps = {
+  id: number;
+  title: string;
+  price: number;
+  imageUrl: string;
+  sizes: number[];
+  types: number[];
+};
+
+const PizzaBlock: React.FC<PizzaBlockProps> = ({ id, title, price, imageUrl, types, sizes }) => {
+  const typesName: string[] = ['тонкое', 'традиционное'];
   const [activeType, setActiveType] = useState(0);
   const [activeSize, setActiveSize] = useState(0);
   const [selectSize, setSelectSize] = useState(sizes[0]);
   const dispatch = useDispatch();
-  const pizzasInCart = useSelector((state) => state.cartSlice.items);
-
-  useEffect(() => {
-    if (pizzasInCart.length > 0) {
-      let totalSum = pizzasInCart.reduce((sum, elem) => {
-        return elem.title === title ? sum + elem.count : sum + 0;
-      }, 0);
-      setCount(totalSum);
-    } else {
-      setCount(0);
-    }
-  }, [pizzasInCart]);
+  const coutPizzaInCart = useSelector(countPizza(title));
 
   const onClickAdd = () => {
-    setCount(count + 1);
-    const newPizza = {
+    const newPizza: TCartItem = {
       id: uuidv4(),
       title,
       price,
@@ -40,11 +39,13 @@ const PizzaBlock = ({ id, title, price, imageUrl, types, sizes }) => {
 
   return (
     <div className="pizza-block">
-      <img className="pizza-block__image" src={imageUrl} alt="Pizza" />
+      <Link to={`pizza/${id}`}>
+        <img className="pizza-block__image" src={imageUrl} alt="Pizza" />
+      </Link>
       <h4 className="pizza-block__title">{title}</h4>
       <div className="pizza-block__selector">
         <ul>
-          {types.map((indexType, index) => {
+          {types.map((indexType: number, index: number) => {
             return (
               <li
                 key={index}
@@ -88,7 +89,7 @@ const PizzaBlock = ({ id, title, price, imageUrl, types, sizes }) => {
             />
           </svg>
           <span>Добавить</span>
-          <i>{count}</i>
+          <i>{coutPizzaInCart}</i>
         </button>
       </div>
     </div>

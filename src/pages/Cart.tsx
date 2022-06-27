@@ -1,13 +1,15 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import CartItem from '../CartItem';
-import { removeAllPizzaFromCart } from '../../redux/slices/cartSlice';
-import CartEmpty from '../CartEmpty';
+import CartItem from '../components/CartItem';
+import { removeAllPizzaFromCart } from '../redux/slices/cart/slice';
+import { selectCart } from '../redux/slices/cart/selectors';
+import CartEmpty from '../components/CartEmpty';
+import { RootState } from '../redux/store';
 
-const Cart = () => {
-  const pizzasInCart = useSelector((state) => state.cartSlice.items);
-  const { totalPrice, totalCount } = useSelector((state) => state.cartSlice);
+const Cart: React.FC = () => {
+  const pizzasInCart = useSelector((state: RootState) => state.cartSlice.items);
+  const { totalPrice, totalCount } = useSelector(selectCart);
   const dispatch = useDispatch();
 
   if (!totalCount) {
@@ -87,7 +89,7 @@ const Cart = () => {
           </div>
         </div>
         <div className="content__items">
-          {pizzasInCart.map((element) => {
+          {pizzasInCart.map((element: any) => {
             return (
               <CartItem
                 key={element.id}
