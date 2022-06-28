@@ -1,11 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import CartItem from '../components/CartItem';
 import { removeAllPizzaFromCart } from '../redux/slices/cart/slice';
 import { selectCart } from '../redux/slices/cart/selectors';
-import CartEmpty from '../components/CartEmpty';
 import { RootState } from '../redux/store';
+import { CartItem, CartEmpty } from '../components';
 
 const Cart: React.FC = () => {
   const pizzasInCart = useSelector((state: RootState) => state.cartSlice.items);

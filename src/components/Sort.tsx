@@ -18,7 +18,7 @@ export const listSort: SortItem[] = [
   { name: 'Алфавиту (ASC)', sortProperty: SortPropety.TITLE_ASC },
 ];
 
-const Sort = () => {
+export const Sort = () => {
   const dispatch = useDispatch();
   const { name } = useSelector(selectSort);
   const [showSort, setShowSort] = useState(false);
@@ -87,5 +87,3 @@ const Sort = () => {
     </div>
   );
 };
-
-export default Sort;

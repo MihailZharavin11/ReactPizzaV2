@@ -3,12 +3,11 @@ import ReactPaginate from 'react-paginate';
 import style from './pagination.module.scss';
 
 type PaginationProps = {
-  currentPage:number,
-  onChange: (value:number) => void
+  currentPage: number;
+  onChange: (value: number) => void;
+};
 
-}
-
-const Pagination:React.FC<PaginationProps> = ({ currentPage, onChange }) => {
+export const Pagination: React.FC<PaginationProps> = ({ currentPage, onChange }) => {
   return (
     <ReactPaginate
       className={style.pagination}
@@ -24,5 +23,3 @@ const Pagination:React.FC<PaginationProps> = ({ currentPage, onChange }) => {
     />
   );
 };
-
-export default Pagination;
